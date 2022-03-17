@@ -108,13 +108,15 @@ The project is built using the below technologies. You will need to install them
               "Group": "Server Group 1",
               "Port": 5432,
               "Username": "dev_blog_user",
-              "Host": "localhost",
+              "Host": "db",
               "SSLMode": "prefer",
               "MaintenanceDB": "dev_blog"
             }
           }
         }
         ```
+
+        **Note, you must specify the docker-compose name for the service, in this case `db`**
 
     1. You will need to specify the password manually. You can visit [docker-compose.yaml](data/docker-compose.yaml) for the passwords.
 
@@ -133,5 +135,7 @@ The project is built using the below technologies. You will need to install them
 ### Data
 
 Below illustrates the initial database design and concept to fulfil the requirements of this project. The proposal includes three tables, namely: Articles, Users, and Comments. Articles will be home to the the Blog Articles "posts" themselves. Users will store information about the User, such as how we authenticate and what level of permissions they have to the site. Finally, Comments will allow authenticated users to add comments, remove, and edit comments on a Blog post.
+
+The web application will adhere to the guidelines and principles as suggested by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#password-storage-concepts).
 
 ![Initial Database Design](images/Dev_Blog_Database_Design.png)
