@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block appstatic %}
+<link rel="stylesheet" type="text/css" href="{% static 'articles/articles.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+{% if articles %}
+    {% for article in articles %}
+        <div class="article-summary flex-fill mt-3" id="article1">
+            <div class="row m-2">
+                <div class="col-8">
+                    <h2>{{ article.title }}</h2>
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <button class="btn"><span>👍</span></button>
+                    <button class="btn"><span>👎</span></button>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col">
+                    <p>{{ article.content|slice:"255" }} ...</p>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col d-flex justify-content-end">
+                    <button class="btn read-more">Read more!</button>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No articles have been written!</p>
+{% endif %}
+
+{% endblock %}

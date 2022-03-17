@@ -1,0 +1,24 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    background: #9D82EB;
+}
+
+a.nav-link {
+    color: #FFFFFF;
+}
+
+.nav-item {
+    text-align: center;
+    text-decoration: none;
+    /* vertical-align: middle; */
+}
+
+.nav-item.middle-nav-item {
+    border: 2px solid #353432;
+    border-radius: 5px;
+    background: #353432;
+    font-size: x-large;
+}

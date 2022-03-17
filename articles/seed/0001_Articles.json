@@ -1,0 +1,62 @@
+[
+    {
+        "model": "articles.article",
+        "id": "5936eb37-10bc-40c0-9791-4e3f4d780d2d",
+        "fields": {
+            "title": "A whole new world",
+            "created_on": "2022-03-12 17:10:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    },
+    {
+        "model": "articles.article",
+        "id": "505cf4d0-6af4-48a4-b5f8-22d8749ffef1",
+        "fields": {
+            "title": "15 Tips For WORLD Success",
+            "created_on": "2022-03-11 17:10:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    },
+    {
+        "model": "articles.article",
+        "id": "84e93f20-4312-45c0-896d-2e01529ed224",
+        "fields": {
+            "title": "This Study Will Perfect Your WORLD: Read Or Miss Out",
+            "created_on": "2022-03-15 17:10:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    },
+    {
+        "model": "articles.article",
+        "id": "38a62ba8-81f3-4097-933e-fcacf7a641c2",
+        "fields": {
+            "title": "WORLD Strategies For Beginners",
+            "created_on": "2022-03-12 17:10:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    },
+    {
+        "model": "articles.article",
+        "id": "ae3b6c56-11b4-4b5d-b28a-c0594516d502",
+        "fields": {
+            "title": "Why I Hate WORLD",
+            "created_on": "2022-03-14 17:10:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    },
+    {
+        "model": "articles.article",
+        "id": "41864d6b-21c0-4814-ac6e-723edee45473",
+        "fields": {
+            "title": "Using 7 WORLD Strategies Like The Pros",
+            "created_on": "2022-02-11 13:12:57",
+            "updated_on": "2022-03-17 17:10:57",
+            "content": "Proin faucibus ultricies libero ut hendrerit. Curabitur quis vestibulum arcu. Sed blandit, libero sit amet consectetur suscipit, justo massa tristique purus, quis scelerisque lectus enim eu diam. Aenean feugiat felis in tortor ultricies, ut varius quam commodo. ..."
+        }
+    }
+]

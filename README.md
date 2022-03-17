@@ -134,8 +134,28 @@ The project is built using the below technologies. You will need to install them
 
 ### Data
 
-Below illustrates the initial database design and concept to fulfil the requirements of this project. The proposal includes three tables, namely: Articles, Users, and Comments. Articles will be home to the the Blog Articles "posts" themselves. Users will store information about the User, such as how we authenticate and what level of permissions they have to the site. Finally, Comments will allow authenticated users to add comments, remove, and edit comments on a Blog post.
-
-The web application will adhere to the guidelines and principles as suggested by [OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#password-storage-concepts).
+Below illustrates the initial database design and concept to fulfil the requirements of this project. The proposal includes two tables, namely: Articles, Users, and Comments. Articles will be home to the the Blog Articles "posts" themselves. Comments will allow authenticated users to add comments, remove, and edit comments on a Blog post.
 
 ![Initial Database Design](images/Dev_Blog_Database_Design.png)
+
+#### Changing the design
+
+When changing the design you can use these handy django ulities for generating, applying, and rolling back the migrations.
+
+```ps1
+python .\manage.py makemigrations
+```
+
+```ps1
+python manage.py migrate articles 0001
+```
+
+```ps1
+python .\manage.py migrate articles zero
+```
+
+To load test data you can use the `loaddata` command, as shown below
+
+```ps1
+python .\manage.py loaddata .\articles\seed\0001_Articles.json
+```
