@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:14.2
+    container_name: postgres
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: dev_blog_user
+      POSTGRES_PASSWORD: dev_blog_user_p
+      POSTGRES_DB: dev_blog
+
+  pgadmin:
+    image: dpage/pgadmin4:6.7
+    container_name: pgadmin
+    ports: 
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev_blog@kylejulian.dev
+      PGADMIN_DEFAULT_PASSWORD: dev_blog_p
+    depends_on:
+     - db
