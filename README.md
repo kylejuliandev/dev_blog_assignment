@@ -159,3 +159,17 @@ To load test data you can use the `loaddata` command, as shown below
 ```ps1
 python .\manage.py loaddata .\articles\seed\0001_Articles.json
 ```
+
+### Docker
+
+If you wish to build a Docker image of the dev_blog web application application, you can use the following docker command:
+
+```ps1
+docker build -t 'devblog:latest' .
+```
+
+To create a container of the newest image, you can do:
+
+```ps1
+docker run -e ENVIRONMENT=prod -e DATABASE_URL=<database_url> -p 8000:8000 devblog
+```

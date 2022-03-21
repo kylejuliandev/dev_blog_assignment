@@ -1,13 +1,14 @@
 import os
-from settings import *
-from connection import Connection
+
+from dev_blog.settings.connection import connection
 
 DEBUG = False
+ALLOWED_HOSTS = [ 'kylejuliandevblog.herokuapp.com', 'localhost', '127.0.0.1', '[::1]', ]
 
 databaseUrl = os.environ.get('DATABASE_URL')
 
 if (databaseUrl):
-    connectionDetails = Connection.Map(databaseUrl)
+    connectionDetails = connection.Connection.Map(databaseUrl)
 
     DATABASES = {
         'default': {
@@ -19,3 +20,4 @@ if (databaseUrl):
             'PORT': connectionDetails.Port
         }
     }
+

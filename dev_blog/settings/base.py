@@ -13,10 +13,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = 'django-insecure-0c74$5oyu#y31t64vbcdp3z&3v6oee1a83f$w28y$_w+=9f&cn'
-DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
@@ -61,17 +60,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dev_blog.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dev_blog',
-        'USER': 'dev_blog_user',
-        'PASSWORD': 'dev_blog_user_p',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
-}
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -93,9 +81,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-  (BASE_DIR / 'static'),
-]
+STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static'), ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
