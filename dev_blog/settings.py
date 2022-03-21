@@ -63,7 +63,7 @@ WSGI_APPLICATION = 'dev_blog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'dev_blog',
         'USER': 'dev_blog_user',
         'PASSWORD': 'dev_blog_user_p',
