@@ -171,5 +171,21 @@ docker build -t 'devblog:latest' .
 To create a container of the newest image, you can do:
 
 ```ps1
-docker run -e ENVIRONMENT=prod -e DATABASE_URL=<database_url> -p 8000:8000 devblog
+docker run -e ENVIRONMENT=prod -e DATABASE_URL=<database_url> -e AZURE_CONNECTION_STRING=<azure_connection_string> -p 8000:8000 devblog
+```
+
+#### Postgresql Database Url
+
+Wherein, the Database URL is the locally accessible Postgresql database server. The url must conform to the standard as required by Postgresql. You can read more [here](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING).
+
+```txt
+postgresql://[userspec@][hostspec][/dbname][?paramspec]
+```
+
+#### Azure Connection String (CDN assets)
+
+The Azure Connection String will be the location of the Blob store where the CDN assets are stored. When running the site locally this can be the [emulated storage](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite?tabs=visual-studio). The emulated storage connection string will look like the following:
+
+```txt
+DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;
 ```

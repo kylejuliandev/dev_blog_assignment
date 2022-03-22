@@ -17,6 +17,7 @@ ENV PYTHONUNBUFFERED=1
 
 ENV ENVIRONMENT=dev
 ENV DATABASE_URL=""
+ENV AZURE_CONNECTION_STRING=""
 
 # Install pip requirements
 COPY requirements.txt .
