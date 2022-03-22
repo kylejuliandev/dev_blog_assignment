@@ -24,5 +24,5 @@ if (databaseUrl):
 # CDN Assets
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_CONTAINER = os.environ.get('Environment')
+AZURE_CONTAINER = os.environ.get('ENVIRONMENT')
 AZURE_CONNECTION_STRING = os.environ.get('AZURE_CONNECTION_STRING')
