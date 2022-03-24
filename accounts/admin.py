@@ -15,6 +15,19 @@ class LoginForm(forms.Form):
         data = self.cleaned_data['username']
         return data.lower()
 
+class SignupForm(forms.Form):
+    username = forms.CharField(label='username',
+        max_length = 60
+    )
+    first_name = forms.CharField(label='first name', max_length=50)
+    last_name = forms.CharField(label='last name', max_length=50)
+    password1 = forms.CharField(label='password1')
+    password2 = forms.CharField(label='password2')
+
+    def clean_username(self):
+        data = self.cleaned_data['username']
+        return data.lower()
+
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
@@ -23,7 +36,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'is_author')
+        fields = ('username', 'first_name', 'last_name', 'is_author', 'password1', 'password2')
 
     def clean_password2(self):
         # Check that the two password entries match
