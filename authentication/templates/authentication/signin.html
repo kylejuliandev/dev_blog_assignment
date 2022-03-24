@@ -23,17 +23,22 @@
             {% endfor %}
         {% endif %}
         <div class="form-floating mb-2">
-            {{ form.email_address.errors }}
-            {% render_field form.email_address class+="form-control" type="email" placeholder="name@example.com" %}
-            <label for="{{ form.email_address.id_for_label }}">Email Address</label>
+            {{ form.username.errors }}
+            {% render_field form.username class+="form-control" type="email" %}
+            <label for="{{ form.username.id_for_label }}">Username</label>
         </div>
         <div class="form-floating mb-3">
             {{ form.password.errors }}
             {% render_field form.password class+="form-control" type="password" %}
             <label for="{{ form.password.id_for_label }}">Password</label>
         </div>
-        <button class="w-50 btn btn-lg btn-primary mb-4" type="submit">Sign in</button>
-        <button class="w-100 btn btn-primary" onClick="javascript:history.go(-1);">Back</button>
+
+        <button class="w-50 btn btn-lg btn-primary mb-5" type="submit">Sign in</button>
+
+        <div class="d-flex justify-content-between">
+            <a class="w-40 btn" onClick="javascript:history.go(-1);">Back</a>
+            <a class="w-40 btn">Sign up</a>
+        </div>
     </form>
 </main>
 {% endblock %}

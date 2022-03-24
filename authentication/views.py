@@ -11,7 +11,7 @@ def signin(request):
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            user = form.cleaned_data['email_address']
+            user = form.cleaned_data['username']
             passw = form.cleaned_data['password']
             user = authenticate(username=user, password=passw)
             if user is not None:
