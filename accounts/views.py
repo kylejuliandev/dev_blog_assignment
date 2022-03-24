@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from authentication.admin import LoginForm
+from accounts.admin import LoginForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -25,7 +25,7 @@ def signin(request):
     else:
         form = LoginForm()
 
-    return render(request, 'authentication/signin.html', { 'form': form })
+    return render(request, 'accounts/signin.html', { 'form': form })
 
 def signout(request):
     logout(request)
