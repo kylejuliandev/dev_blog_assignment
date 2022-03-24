@@ -31,6 +31,14 @@
     <div class="row pt-5">
         <div class="col"><!-- Left content --></div>
         <div class="col-8">
+
+            {% if user.is_authenticated %}
+            <div class="d-flex align-middle mb-5" style="font-size:x-large">
+                <p>Welcome, {{ user.username }}!</p>
+                <span>&#x1f44b</span>
+            </div>
+            {% endif %}
+
             <!-- Middle content -->
 
             {% block content %}
