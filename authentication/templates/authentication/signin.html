@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block appstatic %}
+<link rel="stylesheet" type="text/css" href="{% static 'authentication/authentication.css' %}"/>
+{% endblock %}
+
+{% block body %}
+<main class="text-center form-signin vertical-center d-flex justify-content-center">
+    <form action="login" method="post">
+        {% csrf_token %}
+        <h1 class="mb-4">Please sign in</h1>
+        {% if form.errors %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+        {% endif %}
+        <div class="form-floating mb-2">
+            {{ form.email_address.errors }}
+            {% render_field form.email_address class+="form-control" type="email" placeholder="name@example.com" %}
+            <label for="{{ form.email_address.id_for_label }}">Email Address</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.password.errors }}
+            {% render_field form.password class+="form-control" type="password" %}
+            <label for="{{ form.password.id_for_label }}">Password</label>
+        </div>
+        <button class="w-50 btn btn-lg btn-primary mb-4" type="submit">Sign in</button>
+        <button class="w-100 btn btn-primary" onClick="javascript:history.go(-1);">Back</button>
+    </form>
+</main>
+{% endblock %}
