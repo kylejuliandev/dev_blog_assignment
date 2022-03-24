@@ -7,3 +7,11 @@
 .btn.read-more {
     background: #898989;
 }
+
+.paginate-btn {
+    color: chocolate !important;
+}
+
+.paginate-btn:hover {
+    color: #0e5acd !important;
+}

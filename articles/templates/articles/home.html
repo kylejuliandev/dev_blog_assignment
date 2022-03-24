@@ -12,6 +12,26 @@
 {% block content %}
 
 {% if articles %}
+
+    <div class="container text-center">
+        <div class="row">
+            <div class="col align-self-center">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="paginate-btn btn">previous</a>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn paginate-btn">next</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p class="fs-5 py-1">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+            </div>
+        </div>
+    </div>
+
     {% for article in articles %}
         <div class="article-summary flex-fill mt-3" id="article1">
             <div class="row m-2">
@@ -35,6 +55,7 @@
             </div>
         </div>
     {% endfor %}
+
 {% else %}
     <p>No articles have been written!</p>
 {% endif %}
