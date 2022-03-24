@@ -96,3 +96,6 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/'
+
+# We do not want to couple ourselves to the Django user implementation
+AUTH_USER_MODEL = 'authentication.User'

@@ -34,7 +34,7 @@
 
             {% if user.is_authenticated %}
             <div class="d-flex align-middle mb-5" style="font-size:x-large">
-                <p>Welcome, {{ user.username }}!</p>
+                <p>Welcome, {{ user.first_name }} {{ user.last_name }}!</p>
                 <span>&#x1f44b</span>
             </div>
             {% endif %}

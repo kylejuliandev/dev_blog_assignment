@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from authentication.forms import LoginForm
+from authentication.admin import LoginForm
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
