@@ -11,6 +11,25 @@
 {% endblock %}
 
 {% block content %}
+    {% if user == article.author %}
+        <div class="d-flex justify-content-end">
+            <div class="row">
+                <div class="col">
+                    <form action="." method="POST">
+                        {% csrf_token %}
+                        <button class="btn edit-btn" disabled>Edit</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <form action="{% url 'article' article.id %}" method="POST">
+                        {% csrf_token %}
+                        <input class="btn btn-danger" type="submit" value="Delete"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="d-flex justify-content-center">
         <div class="article-summary mt-3" id="article1">
             <div class="row m-2">

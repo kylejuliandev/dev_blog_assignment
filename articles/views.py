@@ -1,5 +1,5 @@
 from datetime import datetime
-from uuid import uuid4
+from uuid import UUID, uuid4
 from django.forms import ValidationError
 from accounts.models import User
 from articles.admin import PublishArticleForm
@@ -28,14 +28,20 @@ def home(request):
 
     return render(request, 'articles/home.html', { 'page_obj': page_obj })
 
-def article(request, article_id):
+def article(request, article_id:UUID):
     """Get specific article"""
     
     if article_id == None:
         return redirect(reverse(viewname='home'))
-
-    article = Article.objects.get(id=article_id)
     
+    article = get_article(article_id)
+    if request.method == 'POST':
+        user = get_user(request)
+        if user.is_authenticated:
+            if article.author == user:
+                article.delete()
+                return redirect(reverse(viewname='home'))
+
     return render(request, 'articles/article.html', { 'article': article })
 
 def publish_article(request):
@@ -82,3 +88,8 @@ def get_user(request) -> User:
     """Get authenticated user from the request"""
 
     return request.user
+
+def get_article(article_id:UUID) -> Article:
+    """Get article from the database with specified article_id"""
+
+    return Article.objects.get(id=article_id)
