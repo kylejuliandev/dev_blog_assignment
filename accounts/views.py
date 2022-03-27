@@ -118,7 +118,7 @@ def manage(request):
     else:
         return redirect(reverse(viewname='home'))
 
-def request_remove(request):
+def closeaccount(request):
     """Request a user deletion. User can only delete themselves. Django admin tool can be used to delete other users. We do not delete the record in the data, as to preserve database integrity. Instead we anonymise the data."""
     
     response = HttpResponse()

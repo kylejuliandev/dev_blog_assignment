@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block body %}
-<div id="delete-user-modal-confirmation" class="modal fade" tabindex="-1">
+<div id="close-user-account-user-modal-confirmation" class="modal fade" tabindex="-1">
     <div class="vertical-alignment-helper">
         <div class="modal-dialog vertical-align-center">
             <div class="modal-content">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-bs-dismiss="modal">Close</button>
-                    <button id="delete-user-confirmed" class="btn btn-danger">Confirm</button>
+                    <button id="close-user-account-user-confirmed" class="btn btn-danger">Confirm</button>
                 </div>
             </div>
         </div>
@@ -93,7 +93,7 @@
 
         <div class="d-flex justify-content-between">
             <a class="w-40 btn" onClick="javascript:history.go(-1);">Back</a>
-            <button class="w-40 btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal-confirmation">Close account</a>
+            <button class="w-40 btn" type="button" data-bs-toggle="modal" data-bs-target="#close-user-account-user-modal-confirmation">Close account</a>
         </div>
     </form>
 </main>
@@ -101,8 +101,8 @@
 <script type="text/javascript">
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     $(document).ready(function() {
-        const url = "{% url 'delete' %}"
-        $("#delete-user-confirmed").click(function() {
+        const url = "{% url 'closeaccount' %}"
+        $("#close-user-account-user-confirmed").click(function() {
             $.ajax({
                 url: url,
                 type: "DELETE",
