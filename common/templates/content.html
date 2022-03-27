@@ -7,15 +7,21 @@
         <div class="col"></div>
         <div class="col-6">
             <div class="row">
-                <div class="col nav-item align-self-center">
-                    <a href="{% url 'home' %}" class="nav-link">Articles</a>
-                </div>
-                <div class="col nav-item middle-nav-item">
-                    <a href="{% url 'home' %}" class="nav-link">Post</a>
-                </div>
-                <div class="col nav-item">
-
-                </div>
+                {% if user.is_authenticated and user.is_author %}
+                    <div class="col nav-item align-self-center">
+                        <a href="{% url 'home' %}" class="nav-link">Articles</a>
+                    </div>
+                    <div class="col nav-item middle-nav-item">
+                        <a href="{% url 'publish_article' %}" class="nav-link">Post</a>
+                    </div>
+                    <div class="col nav-item"></div>
+                {% else %}
+                    <div class="col nav-item"></div>
+                    <div class="col nav-item middle-nav-item">
+                        <a href="{% url 'home' %}" class="nav-link">Articles</a>
+                    </div>
+                    <div class="col nav-item"></div>
+                {% endif %}
             </div>
         </div>
         <div class="col">

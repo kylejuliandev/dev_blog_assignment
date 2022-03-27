@@ -1,3 +1,8 @@
+from datetime import datetime
+from uuid import uuid4
+from django.forms import ValidationError
+from accounts.models import User
+from articles.admin import PublishArticleForm
 from articles.models import Article
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -32,3 +37,48 @@ def article(request, article_id):
     article = Article.objects.get(id=article_id)
     
     return render(request, 'articles/article.html', { 'article': article })
+
+def publish_article(request):
+    """Presents the user with a form to create a article"""
+
+    if request.user.is_authenticated:
+        user = get_user(request)
+        if user.is_author:
+            if request.method == 'POST':
+                form = PublishArticleForm(request.POST)
+
+                if form.is_valid():
+                    title = str(form.cleaned_data['title'])
+                    summary = str(form.cleaned_data['summary'])
+                    content = str(form.cleaned_data['content'])
+
+                    if len(title) > 200:
+                        form.add_error(field='title', error=ValidationError('Title is too long'))
+                    
+                    if len(summary) > 255:
+                        form.add_error(field='title', error=ValidationError('Summary is too long'))
+                    
+                    if not form.errors:
+                        newArticle = Article()
+                        newArticle.id = uuid4()
+                        newArticle.author = user
+                        newArticle.title = title
+                        newArticle.summary = summary
+                        newArticle.content = content
+                        newArticle.created_on = datetime.utcnow()
+                        newArticle.updated_on = datetime.utcnow()
+
+                        newArticle.save()
+
+                        return article(request, newArticle.id)
+            else:
+                form = PublishArticleForm()
+
+            return render(request, 'articles/publish.html', { 'form': form })
+    else:
+        return redirect(reverse(viewname='home'))
+
+def get_user(request) -> User:
+    """Get authenticated user from the request"""
+
+    return request.user
