@@ -10,4 +10,4 @@ class Article(models.Model):
     created_on = models.DateTimeField('article written on')
     updated_on = models.DateTimeField('article updated on')
     content = models.CharField('content', max_length=4000)
-    author_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
