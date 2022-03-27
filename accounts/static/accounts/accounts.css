@@ -14,9 +14,38 @@
     background-color: #9D82EB;
 }
 
+.form-manage {
+    width: 100%;
+    max-width: 30%;
+    padding: 15px;
+    margin: auto;
+    background-color: #9D82EB;
+}
+
 .vertical-center {
     min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
     min-height: 100vh; /* These two lines are counted as one :-)       */
   
     align-items: center;
+}
+
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none;
+}
+
+.vertical-align-center {
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+
+.modal-content {
+    width:inherit;
+    max-width:inherit;
+    height:inherit;
+    margin: 0 auto;
+    pointer-events:all;
 }

@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    Manage
+{% endblock %}
+
+{% block appstatic %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/accounts.css' %}"/>
+{% endblock %}
+
+{% block body %}
+<div id="delete-user-modal-confirmation" class="modal fade" tabindex="-1">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete user confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you wish to remove your user account and data?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-bs-dismiss="modal">Close</button>
+                    <button id="delete-user-confirmed" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<main class="text-center form-manage vertical-center d-flex justify-content-center needs-validation">
+    <form action="{% url 'manage' %}" method="post">
+        {% csrf_token %}
+        <h1 class="mb-4">Change your account details</h1>
+
+        {% if form.errors %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="form-floating mb-2">
+            {% if form.first_name.errors %}
+                {% render_field form.first_name class+="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.first_name class+="form-control" %}
+            {% endif %}
+
+            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            {% for message in form.first_name.errors %}
+                <p>*{{ message }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-floating mb-5">
+            {% if form.last_name.errors %}
+                {% render_field form.last_name class+="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.last_name class+="form-control" %}
+            {% endif %}
+
+            <label for="{{ form.last_name.id_for_label }}">Last name</label>
+            {% for message in form.last_name.errors %}
+                <p>*{{ message }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="row g-3 mb-3 justify-content-center">
+            <div class="col-sm-6">
+                <div class="form-floating mb-2">
+                    {% if form.password.errors %}
+                        {% render_field form.password class+="form-control is-invalid" type="password" %}
+                    {% else %}
+                        {% render_field form.password class+="form-control" type="password" %}
+                    {% endif %}
+
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    {% for message in form.password.errors %}
+                        <p>*{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <button class="w-40 align-self-end btn btn-lg btn-primary mb-5" type="submit">Save</button>
+
+        <div class="d-flex justify-content-between">
+            <a class="w-40 btn" onClick="javascript:history.go(-1);">Back</a>
+            <button class="w-40 btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal-confirmation">Delete account</a>
+        </div>
+    </form>
+</main>
+
+<script type="text/javascript">
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    $(document).ready(function() {
+        const url = "{% url 'delete' %}"
+        $("#delete-user-confirmed").click(function() {
+            $.ajax({
+                url: url,
+                type: "DELETE",
+                headers: {
+                    "X-CSRFToken": csrftoken
+                },
+                success: function() {
+                    window.location.replace("{% url 'home' %}")
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock %}

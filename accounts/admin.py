@@ -28,6 +28,11 @@ class SignupForm(forms.Form):
         data = self.cleaned_data['username']
         return data.lower()
 
+class ManageForm(forms.Form):
+    first_name = forms.CharField(label='first name', max_length=50)
+    last_name = forms.CharField(label='last name', max_length=50)
+    password = forms.CharField(label='password')
+
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
