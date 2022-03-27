@@ -16,15 +16,17 @@
         <div class="modal-dialog vertical-align-center">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Delete user confirmation</h5>
+                    <h5 class="modal-title">Close account confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <p>Do you wish to remove your user account and data?</p>
+                    <p>Confirming this action will instruct the blog to remove all articles and comments you may have posted. Additionally, your user account will be closed. You will no longer be able to log in to the platform.</p>
+                    <div class="alert alert-danger">You will not be able to undo this action!</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-bs-dismiss="modal">Close</button>
-                    <button id="delete-user-confirmed" class="btn btn-danger">Delete</button>
+                    <button id="delete-user-confirmed" class="btn btn-danger">Confirm</button>
                 </div>
             </div>
         </div>
@@ -91,7 +93,7 @@
 
         <div class="d-flex justify-content-between">
             <a class="w-40 btn" onClick="javascript:history.go(-1);">Back</a>
-            <button class="w-40 btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal-confirmation">Delete account</a>
+            <button class="w-40 btn" type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal-confirmation">Close account</a>
         </div>
     </form>
 </main>
