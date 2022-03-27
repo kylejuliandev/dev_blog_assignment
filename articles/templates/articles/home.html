@@ -27,7 +27,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <p class="fs-5 py-1">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+                <p class="fs-5">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
             </div>
         </div>
     </div>
@@ -37,6 +37,7 @@
             <div class="row m-2">
                 <div class="col-8">
                     <h2>{{ article.title }}</h2>
+                    <p>{{ article.created_on }}</p>
                 </div>
                 <div class="col d-flex justify-content-end">
                     <button class="btn btn-lg"><span>&#x1F44D</span></button>
@@ -49,6 +50,9 @@
                 </div>
             </div>
             <div class="row m-2">
+                <div class="col-8">
+                    <p class="author">{{ article.author.first_name }} {{ article.author.last_name }}</p>
+                </div>
                 <div class="col d-flex justify-content-end">
                     <button class="btn read-more">Read more!</button>
                 </div>
