@@ -4,6 +4,7 @@ from dev_blog.settings.connection import connection
 
 DEBUG = False
 ALLOWED_HOSTS = [ 'kylejuliandevblog.herokuapp.com', 'localhost', '127.0.0.1', '[::1]', ]
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 databaseUrl = os.environ.get('DATABASE_URL')
 
