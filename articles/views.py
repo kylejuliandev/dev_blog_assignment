@@ -76,6 +76,8 @@ def publish_article(request):
 
                         newArticle.save()
 
+                        # We overwrite the request method to prevent instaneous deletion
+                        request.method = "GET"
                         return article(request, newArticle.id)
             else:
                 form = PublishArticleForm()
