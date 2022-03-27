@@ -171,7 +171,7 @@ docker build -t 'devblog:latest' .
 To create a container of the newest image, you can do:
 
 ```ps1
-docker run -e ENVIRONMENT=prod -e DATABASE_URL=<database_url> -e AZURE_CONNECTION_STRING=<azure_connection_string> -p 8000:8000 devblog
+docker run -e ENVIRONMENT=prod -e DATABASE_URL=<database_url> -e AZURE_CONNECTION_STRING=<azure_connection_string> -e DJANGO_SECRET_KEY=<django_secret_key> -p 8000:8000 devblog
 ```
 
 #### Postgresql Database Url
