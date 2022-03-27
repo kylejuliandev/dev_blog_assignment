@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField(
         verbose_name = 'username',
-        max_length = 60,
+        max_length = 255,
         unique = True,
     )
     is_active = models.BooleanField(default=True)

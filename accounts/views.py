@@ -1,3 +1,4 @@
+from uuid import uuid4
 from django.http import HttpResponse
 from accounts.admin import LoginForm, ManageForm, SignupForm
 from accounts.models import User, UserManager
@@ -7,6 +8,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 import re
+import hashlib
 
 def signin(request):
     """User is presented with login form 'accounts/signin.html'"""
@@ -117,21 +119,28 @@ def manage(request):
         return redirect(reverse(viewname='home'))
 
 def request_remove(request):
-    """Request a user deletion. User can only delete themselves. Django admin tool can be used to delete other users"""
-
+    """Request a user deletion. User can only delete themselves. Django admin tool can be used to delete other users. We do not delete the record in the data, as to preserve database integrity. Instead we anonymise the data."""
+    
     response = HttpResponse()
 
     if request.user.is_authenticated:
         if request.method == 'DELETE':
             user = request.user
-            user.delete()
+            user.first_name = "[removed]"
+            user.last_name = "[removed]"
+
+            uuid = uuid4()
+            usernameAndUuid = str(user.username) + str(uuid)
+            user.username = hashlib.sha256(usernameAndUuid.encode()).hexdigest()
+            user.is_active = False
+            user.save()
 
             # Remove auth cookies
             logout(request)
             
             response.status_code = 200
         else:
-            # Mehtod not allowed
+            # Method not allowed
             response.status_code = 405
     else:
         # Unauthorized
@@ -141,8 +150,9 @@ def request_remove(request):
 
 def validate_name(form:Form, field:str, input:str):
     """Validates a name field aganist pre-defined rules. Specifically that a name cannot be more than 50 characters long and 
-    must consist of letters only"""
+    must consist of letters only. Adds a field specific error to the form."""
 
+    # Only alphabetical characters are allowable
     charactersOnlyPattern = '^[a-zA-Z]+$'
     if len(input) > 50:
         form.add_error(field=field, error='Name is too long')
@@ -151,7 +161,7 @@ def validate_name(form:Form, field:str, input:str):
         form.add_error(field=field, error='Name cannot only consist of letters')
 
 def validate_password(form:Form, password1:str, password2:str):
-    """Validates that two passwords are equal and that a password must be longer than 8 characters"""
+    """Validates that two passwords are equal and that a password must be longer than 8 characters. Adds a field specific error to the form."""
 
     if len(password1) < 8:
         form.add_error(field='password1', error='Password is too short')
