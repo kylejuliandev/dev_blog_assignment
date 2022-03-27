@@ -136,7 +136,7 @@ The project is built using the below technologies. You will need to install them
 
 Below illustrates the initial database design and concept to fulfil the requirements of this project. The proposal includes two tables, namely: Articles, Users, and Comments. Articles will be home to the the Blog Articles "posts" themselves. Comments will allow authenticated users to add comments, remove, and edit comments on a Blog post.
 
-![Initial Database Design](images/Dev_Blog_Database_Design.png)
+![Initial Database Design](images/database-design.png)
 
 #### Changing the design
 
