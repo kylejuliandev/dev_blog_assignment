@@ -6,62 +6,60 @@
 {% endblock %}
 
 {% block appstatic %}
-<link rel="stylesheet" type="text/css" href="{% static 'articles/articles.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'articles/articles.css' %}"/>
 {% endblock %}
 
 {% block content %}
+    {% if articles %}
+        <div class="container text-center">
+            <div class="row">
+                <div class="col align-self-center">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="paginate-btn btn">previous</a>
+                    {% endif %}
 
-{% if articles %}
-
-    <div class="container text-center">
-        <div class="row">
-            <div class="col align-self-center">
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="paginate-btn btn">previous</a>
-                {% endif %}
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="btn paginate-btn">next</a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p class="fs-5">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
-            </div>
-        </div>
-    </div>
-
-    {% for article in articles %}
-        <div class="article-summary flex-fill mt-3" id="article1">
-            <div class="row m-2">
-                <div class="col-8">
-                    <h2>{{ article.title }}</h2>
-                    <p>{{ article.created_on }}</p>
-                </div>
-                <div class="col d-flex justify-content-end">
-                    <button class="btn btn-lg"><span>&#x1F44D</span></button>
-                    <button class="btn btn-lg"><span>&#x1F44E</span></button>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="paginate-btn btn">next</a>
+                    {% endif %}
                 </div>
             </div>
-            <div class="row m-2">
+            <div class="row">
                 <div class="col">
-                    <p>{{ article.content|slice:"255" }} ...</p>
-                </div>
-            </div>
-            <div class="row m-2">
-                <div class="col-8">
-                    <p class="author">{{ article.author.first_name }} {{ article.author.last_name }}</p>
-                </div>
-                <div class="col d-flex justify-content-end">
-                    <button class="btn read-more">Read more!</button>
+                    <p class="fs-5">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
                 </div>
             </div>
         </div>
-    {% endfor %}
 
-{% else %}
-    <p>No articles have been written!</p>
-{% endif %}
-
+        {% for article in articles %}
+            <div class="d-flex justify-content-center">
+                <div class="article-summary flex-fill mt-3" id="article1">
+                    <div class="row m-2">
+                        <div class="col-8">
+                            <h2>{{ article.title }}</h2>
+                            <p>{{ article.created_on }}</p>
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <button class="btn btn-lg"><span>&#x1F44D</span></button>
+                            <button class="btn btn-lg"><span>&#x1F44E</span></button>
+                        </div>
+                    </div>
+                    <div class="row m-2">
+                        <div class="col">
+                            <p>{{ article.summary }} ...</p>
+                        </div>
+                    </div>
+                    <div class="row m-2">
+                        <div class="col-8">
+                            <p class="author">{{ article.author.first_name }} {{ article.author.last_name }}</p>
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <a class="btn read-more" href="{% url 'article' article_id=article.id %}">Read more!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No articles have been written!</p>
+    {% endif %}
 {% endblock %}
