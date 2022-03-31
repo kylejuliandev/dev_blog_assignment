@@ -63,6 +63,28 @@
     background: #83ABD6;
 }
 
+.comment-created-on {
+    font-style: italic;
+    font-size: smaller;
+}
+
+.comment-author {
+    font-style: italic;
+    font-size: smaller;
+}
+
+.comment-divider {
+    margin: 0;
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #354557;
+}
+
+.comment-delete-btn {
+    color: red !important;
+    text-decoration: none;
+}
+
 .publish-comment-form {
     width: 100%;
     max-width: 70%;

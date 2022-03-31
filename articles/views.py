@@ -83,6 +83,24 @@ def comment(request, article_id:UUID):
     
     return render(request, 'articles/comment.html', { 'article': existingArticle, 'form': form, 'article_id': article_id })
 
+def remove_comment(request, article_id:UUID, comment_id:UUID):
+    if article_id == None or comment_id == None:
+        return redirect(reverse(viewname='home'))
+    
+    if not request.user.is_authenticated:
+        return redirect(reverse(viewname='home'))
+
+    try:
+        comment = get_comment(article_id, comment_id)    
+        user = get_user(request)
+        if comment.author == user:
+            comment.delete()
+
+        request.method = "GET"
+        return article(request, article_id)
+    except:
+        return article(request, article_id)
+
 def publish_article(request):
     """Presents the user with a form to create a article"""
 
@@ -179,5 +197,9 @@ def get_article(article_id:UUID) -> Article:
     return Article.objects.get(id=article_id)
 
 def get_comments(article_id:UUID):
-
+    """Get comments related to an article"""
     return Comment.objects.filter(article=article_id)
+
+def get_comment(article_id:UUID, comment_id:UUID):
+    """Get comment related to a specific article"""
+    return Comment.objects.get(article=article_id, id=comment_id)

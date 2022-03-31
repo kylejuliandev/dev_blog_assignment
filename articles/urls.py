@@ -13,5 +13,6 @@ urlpatterns = [
     path('article/<uuid:article_id>', views.article, name='article'),
     path('article/<uuid:article_id>/edit', views.edit_article, name='edit_article'),
     path('article/<uuid:article_id>/comment', views.comment, name='comment_article'),
+    path('article/<uuid:article_id>/comment/<uuid:comment_id>/delete', views.remove_comment, name='delete_comment'),
     path('article', views.publish_article, name='publish_article'),
 ]

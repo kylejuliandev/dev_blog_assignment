@@ -80,19 +80,30 @@
                 {% for comment in comments %}
                     <div class="comment mt-2">
                         <div class="row m-1">
-                            <div class="col-10">
+                            <div class="col-11">
                                 <p>{{ comment.content }}</p>
                             </div>
-                            <div class="col-2 d-flex justify-content-end">
-                                <p>{{ comment.author.first_name }} {{ comment.author.last_name }}</p>
+                            {% if comment.author == user %}
+                                <div class="col-1 d-flex justify-content-end">
+                                    <a class="comment-delete-btn" href="{% url 'delete_comment' article_id=article.id comment_id=comment.id %}" onclick="confirmAction(event, 'Are you sure?')">X</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <hr class="comment-divider" />
                             </div>
                         </div>
-                        <div class="row m-1">
-                            <div class="col d-flex justify-content-end">
-                                <p>{{ comment.created_on }}</p>
+                        <div class="row me-1 ms-1">
+                            <div class="col-2">
+                                <p class="comment-author">{{ comment.author.first_name }} {{ comment.author.last_name }}</p>
+                            </div>
+                            <div class="col-10 d-flex justify-content-end">
+                                <p class="comment-created-on">{{ comment.created_on }}</p>
                             </div>
                         </div>
                     </div>
+                    
                 {% endfor %}
             </div>
         </div>
