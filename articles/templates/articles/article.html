@@ -23,7 +23,7 @@
                 <div class="col">
                     <form action="{% url 'article' article.id %}" method="POST">
                         {% csrf_token %}
-                        <input class="btn btn-danger" type="submit" value="Delete"/>
+                        <input class="btn btn-danger" onclick="confirmAction(event, 'Are you sure you want to delete this article?')" type="submit" value="Delete"/>
                     </form>
                 </div>
             </div>
@@ -46,4 +46,13 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        function confirmAction(e, msg)
+        {
+            if(!confirm(msg)) {
+                e.preventDefault();
+            }
+        }
+    </script>
 {% endblock %}
