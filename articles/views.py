@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from django.forms import ValidationError
 from accounts.models import User
 from articles.admin import PublishArticleForm
-from articles.models import Article
+from articles.models import Article, Comment
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.generic import ListView
@@ -41,8 +41,10 @@ def article(request, article_id:UUID):
             if article.author == user:
                 article.delete()
                 return redirect(reverse(viewname='home'))
-
-    return render(request, 'articles/article.html', { 'article': article })
+    
+    comments = get_comments(article_id)
+    
+    return render(request, 'articles/article.html', { 'article': article, 'comments': comments })
 
 def publish_article(request):
     """Presents the user with a form to create a article"""
@@ -138,3 +140,7 @@ def get_article(article_id:UUID) -> Article:
     """Get article from the database with specified article_id"""
 
     return Article.objects.get(id=article_id)
+
+def get_comments(article_id:UUID):
+
+    return Comment.objects.filter(article=article_id)
