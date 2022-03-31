@@ -16,7 +16,7 @@
         <a class="btn" href="#comments">🔽 See comments</a>
     {% endif %}
 
-    {% if user == article.author %}
+    {% if user == article.author or user.is_admin %}
         <div class="d-flex justify-content-end">
             <div class="row">
                 <div class="col">
@@ -83,7 +83,7 @@
                             <div class="col-11">
                                 <p>{{ comment.content }}</p>
                             </div>
-                            {% if comment.author == user %}
+                            {% if comment.author == user or user.is_admin %}
                                 <div class="col-1 d-flex justify-content-end">
                                     <a class="comment-delete-btn" href="{% url 'delete_comment' article_id=article.id comment_id=comment.id %}" onclick="confirmAction(event, 'Are you sure?')">X</a>
                                 </div>

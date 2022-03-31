@@ -9,6 +9,10 @@ from django.urls import reverse
 from django.views.generic import ListView
 from django.core.paginator import Paginator
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class HomeListView(ListView):
     """Renders the home page, with a list of all articles."""
     model = Article
@@ -34,17 +38,37 @@ def article(request, article_id:UUID):
     if article_id == None:
         return redirect(reverse(viewname='home'))
     
-    article = get_article(article_id)
-    if request.method == 'POST':
-        user = get_user(request)
-        if user.is_authenticated:
-            if article.author == user:
-                article.delete()
-                return redirect(reverse(viewname='home'))
+    user = get_user(request)
+
+    try:
+        logger.debug('Getting Article %s for User %s', article_id, user.username)
+        article = get_article(article_id)
+    except:
+        logger.exception('Unable to get Article %s for User %s as the database retrieve failed', article_id, user.username)
+        return redirect(reverse(viewname='home'))
+
+    if request.method != 'POST':
+        comments = get_comments(article_id)
+        return render(request, 'articles/article.html', { 'article': article, 'comments': comments })
+    
+    if user is None or not user.is_authenticated:
+        logger.warning('User tried to remove a article %s but they were not authenticated', article_id)
+        comments = get_comments(article_id)
+        return render(request, 'articles/article.html', { 'article': article, 'comments': comments })
+
+    if article.author == user or user.is_admin:
+        try:
+            article.delete()
+            logger.info('User %s removed article %s', str(user.username), str(article_id))
+        except:
+            logger.exception('Unable to delete Article %s for User %s as the database delete failed', article_id, user.username)
+
+        return redirect(reverse(viewname='home'))
+    else:
+        logger.warning('Authenticated User %s tried to remove a article %s they had not published', user.username, article_id)
     
     comments = get_comments(article_id)
-    
-    return render(request, 'articles/article.html', { 'article': article, 'comments': comments })
+    return render(request, 'articles/article.html', { 'article': article, 'comments': comments })       
 
 def comment(request, article_id:UUID):
     """Comment on an article"""
@@ -52,139 +76,191 @@ def comment(request, article_id:UUID):
     if article_id == None:
         return redirect(reverse(viewname='home'))
     
-    if not request.user.is_authenticated:
+    user = get_user(request)
+    if not user.is_authenticated:
+        logger.warning('Unauthenticated user tried to comment on an article')
         return redirect(reverse(viewname='home'))
 
-    existingArticle = get_article(article_id)
+    try:
+        logger.debug('Getting Article %s for User %s', article_id, user.username)
+        existingArticle = get_article(article_id)
+    except:
+        logger.debug('User %s requested Article %s that does not exist', user.username, article_id)
+        return redirect(reverse(viewname='home'))
 
-    if request.method == "POST":
-        form = PublishCommentForm(request.POST)
-        if form.is_valid():
-            user = get_user(request)
-            content = str(form.cleaned_data['content'])
-
-            if len(content) > 280:
-                form.add_error(field='content', error=ValidationError('Comment is too long'))
-            
-            if not form.errors:
-                comment = Comment()
-                comment.id = uuid4()
-                comment.author = user
-                comment.article = existingArticle
-                comment.content = content
-                comment.created_on = datetime.utcnow()
-                comment.save()
-
-                # Switch method to GET
-                request.method = "GET"
-                return article(request, article_id)
-    else:
+    if request.method != 'POST':
         form = PublishCommentForm()
+        return render(request, 'articles/comment.html', { 'article': existingArticle, 'form': form, 'article_id': article_id })
     
+    form = PublishCommentForm(request.POST)
+    if form.is_valid():
+        content = str(form.cleaned_data['content'])
+
+        if len(content) > 280:
+            form.add_error(field='content', error=ValidationError('Comment is too long'))
+        
+        if not form.errors:
+            comment = Comment()
+            comment.id = uuid4()
+            comment.author = user
+            comment.article = existingArticle
+            comment.content = content
+            comment.created_on = datetime.utcnow()
+
+            try:
+                comment.save()
+                logger.info('Comment %s added to Article %s by User %s', comment.id, article_id, user.username)
+            except:
+                logger.exception('Unable to save Comment %s to the database for User %s on Article %s due to exception', comment.id, user.username, article_id)
+
+            # Switch method to GET
+            request.method = "GET"
+            return article(request, article_id)
+        else:
+            logger.debug('User %s tried to publish a Comment on Article %s but it failed as additional form validation failed', user.username, article_id)
+    else:
+        logger.debug('User %s tried to publish a Comment on Article %s but it failed as the form was not valid', user.username, article_id)
+
     return render(request, 'articles/comment.html', { 'article': existingArticle, 'form': form, 'article_id': article_id })
 
 def remove_comment(request, article_id:UUID, comment_id:UUID):
     if article_id == None or comment_id == None:
         return redirect(reverse(viewname='home'))
     
-    if not request.user.is_authenticated:
+    user = get_user(request)
+    if not user.is_authenticated:
+        logger.warning('Unauthenticated User tried to remove Comment %s on Article %s', comment_id, article_id)
         return redirect(reverse(viewname='home'))
-
+    
     try:
         comment = get_comment(article_id, comment_id)    
-        user = get_user(request)
         if comment.author == user:
             comment.delete()
+            logger.info('User %s removed Comment %s on Article %s', user.username, comment_id, article_id)
+        else:
+            logger.warning('User %s tried to remove a Comment %s they did not write', user.username, comment_id)
 
         request.method = "GET"
         return article(request, article_id)
     except:
+        logger.exception('Unable to delete Comment %s on Article %s by User %s', comment_id, article_id, user.username)
         return article(request, article_id)
 
 def publish_article(request):
     """Presents the user with a form to create a article"""
 
-    if request.user.is_authenticated:
-        user = get_user(request)
-        if user.is_author:
-            if request.method == 'POST':
-                form = PublishArticleForm(request.POST)
+    user = get_user(request)
 
-                if form.is_valid():
-                    title = str(form.cleaned_data['title'])
-                    summary = str(form.cleaned_data['summary'])
-                    content = str(form.cleaned_data['content'])
-
-                    if len(title) > 200:
-                        form.add_error(field='title', error=ValidationError('Title is too long'))
-                    
-                    if len(summary) > 255:
-                        form.add_error(field='title', error=ValidationError('Summary is too long'))
-                    
-                    if not form.errors:
-                        newArticle = Article()
-                        newArticle.id = uuid4()
-                        newArticle.author = user
-                        newArticle.title = title
-                        newArticle.summary = summary
-                        newArticle.content = content
-                        newArticle.created_on = datetime.utcnow()
-                        newArticle.updated_on = datetime.utcnow()
-
-                        newArticle.save()
-
-                        # We overwrite the request method to prevent instaneous deletion
-                        request.method = "GET"
-                        return article(request, newArticle.id)
-            else:
-                form = PublishArticleForm()
-
-            return render(request, 'articles/publish.html', { 'form': form })
-    else:
+    if not user.is_authenticated:
+        logger.warning('Unauthenticated User tried to publish an Article')
         return redirect(reverse(viewname='home'))
+        
+    if not user.is_author:
+        logger.warning('User %s tried to publish an Article', user.username)
+        return redirect(reverse(viewname='home'))
+
+    if request.method != 'POST':
+        form = PublishArticleForm()
+        return render(request, 'articles/publish.html', { 'form': form })
+
+    form = PublishArticleForm(request.POST)
+    if form.is_valid():
+        title = str(form.cleaned_data['title'])
+        summary = str(form.cleaned_data['summary'])
+        content = str(form.cleaned_data['content'])
+
+        if len(title) > 200:
+            form.add_error(field='title', error=ValidationError('Title is too long'))
+        
+        if len(summary) > 255:
+            form.add_error(field='title', error=ValidationError('Summary is too long'))
+        
+        if not form.errors:
+            newArticle = Article()
+            newArticle.id = uuid4()
+            newArticle.author = user
+            newArticle.title = title
+            newArticle.summary = summary
+            newArticle.content = content
+            newArticle.created_on = datetime.utcnow()
+            newArticle.updated_on = datetime.utcnow()
+
+            newArticle.save()
+
+            # We overwrite the request method to prevent instaneous deletion
+            request.method = "GET"
+            return article(request, newArticle.id)
+        else:
+            logger.debug('User %s tried to create Article but additional form validation failed', user.username)    
+    else:
+        logger.debug('User %s tried to create Article but form validation failed', user.username)
+
+    return render(request, 'articles/publish.html', { 'form': form })
 
 def edit_article(request, article_id):
     """Presents the user with a form to edit a article"""
 
-    if request.user.is_authenticated:
-        user = get_user(request)
-        if user.is_author:
-            existingArticle = get_article(article_id)
-            if existingArticle != None and existingArticle.author == user:
-                if request.method == 'POST':
-                    form = PublishArticleForm(request.POST)
+    user = get_user(request)
+    if user == None or not request.user.is_authenticated:
+        logger.warning('Unauthenticated user tried to edit Article')
+        return redirect(reverse(viewname='home'))
 
-                    if form.is_valid():
-                        title = str(form.cleaned_data['title'])
-                        summary = str(form.cleaned_data['summary'])
-                        content = str(form.cleaned_data['content'])
+    if not user.is_author and not user.is_admin:
+        logger.warning('User %s tried to edit Article %s but they do not have permissions to do so', user.username, article_id)
+        return redirect(reverse(viewname='home'))
 
-                        if len(title) > 200:
-                            form.add_error(field='title', error=ValidationError('Title is too long'))
-                        
-                        if len(summary) > 255:
-                            form.add_error(field='title', error=ValidationError('Summary is too long'))
-                        
-                        if not form.errors:
-                            existingArticle.title = title
-                            existingArticle.summary = summary
-                            existingArticle.content = content
-                            existingArticle.updated_on = datetime.utcnow()
+    try:
+        existingArticle = get_article(article_id)
+    except:
+        logger.warning('User %s tried to edit Article %s but it does not exist', user.username, article_id)
+        return redirect(reverse(viewname='home'))
 
-                            existingArticle.save()
+    if existingArticle == None:
+        logger.warning('User %s tried to edit Article %s but it does not exist', user.username, article_id)
+        return redirect(reverse(viewname='home'))
 
-                            # We overwrite the request method to prevent instaneous deletion
-                            request.method = "GET"
-                            return article(request, existingArticle.id)
-                else:
-                    form = PublishArticleForm()
-                    form.fields['title'].initial = existingArticle.title
-                    form.fields['summary'].initial = existingArticle.summary
-                    form.fields['content'].initial = existingArticle.content
-                
-                return render(request, 'articles/edit.html', { 'form': form })
+    if existingArticle.author != user and not user.is_admin:
+        logger.warning('User %s tried to edit Article %s but they did not publish it', user.username, article_id)
+        return redirect(reverse(viewname='home'))
     
-    return redirect(reverse(viewname='home'))
+    if request.method != 'POST':
+        form = PublishArticleForm()
+        form.fields['title'].initial = existingArticle.title
+        form.fields['summary'].initial = existingArticle.summary
+        form.fields['content'].initial = existingArticle.content
+        return render(request, 'articles/edit.html', { 'form': form })
+   
+    form = PublishArticleForm(request.POST)
+
+    if form.is_valid():
+        title = str(form.cleaned_data['title'])
+        summary = str(form.cleaned_data['summary'])
+        content = str(form.cleaned_data['content'])
+
+        if len(title) > 200:
+            form.add_error(field='title', error=ValidationError('Title is too long'))
+        
+        if len(summary) > 255:
+            form.add_error(field='title', error=ValidationError('Summary is too long'))
+        
+        if not form.errors:
+            existingArticle.title = title
+            existingArticle.summary = summary
+            existingArticle.content = content
+            existingArticle.updated_on = datetime.utcnow()
+
+            existingArticle.save()
+            logger.info('User %s edited Article %s', user.username, article_id)
+
+            # We overwrite the request method to prevent instaneous deletion
+            request.method = "GET"
+            return article(request, existingArticle.id)
+        else:
+            logger.debug('User %s tried to edit Article %s but the additional form validation failed', user.username, article_id)    
+    else:
+        logger.debug('User %s tried to edit Article %s but they submitted a form with errors', user.username, article_id)
+
+    return render(request, 'articles/edit.html', { 'form': form })
 
 def get_user(request) -> User:
     """Get authenticated user from the request"""
