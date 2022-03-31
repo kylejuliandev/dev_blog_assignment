@@ -1,0 +1,55 @@
+{% extends "content.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load markdown_extras %}
+
+{% block title %}
+    Comment {{ article.title }}
+{% endblock %}
+
+{% block appstatic %}
+    <link rel="stylesheet" type="text/css" href="{% static 'articles/articles.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<div class="text-center d-flex justify-content-center needs-validation">
+    <form class="publish-comment-form p-2" url="{% url 'comment_article' article_id %}" method="post">
+        {% csrf_token %}
+        <h1>Add a comment</h1>
+        <h5 class="mb-4">{{ article.title }}</h5>
+
+        {% if form.errors %}
+            {% for error in form.non_field_errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row g-3 justify-content-center mb-2">
+            <div class="col-sm-8">
+                <div class="form-floating">
+                    {% if form.content.errors %}
+                        {% render_field form.content class+="form-control is-invalid" %}
+                    {% else %}
+                        {% render_field form.content class+="form-control" %}
+                    {% endif %}
+        
+                    <label for="{{ form.content.id_for_label }}">Content</label>
+                    {% for message in form.content.errors %}
+                        <p>*{{ message }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-2">
+            <button class="w-40 btn btn-lg btn-primary" type="submit">Publish</button>
+        </div>
+
+        <div class="d-flex justify-content-start">
+            <a class="w-40 btn" onClick="javascript:history.go(-1);">Back</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

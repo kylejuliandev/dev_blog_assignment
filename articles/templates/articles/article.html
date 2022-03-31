@@ -62,8 +62,18 @@
         </div>
     </div>
 
+    {% if user.is_authenticated %}
+        <div class="row mt-5">
+            <div class="col d-flex justify-content-end">
+                <a class="btn btn-primary" href="{% url 'comment_article' article.id %}">Add a comment!</a>
+            </div>
+        </div>
+    {% endif %}
+
     {% if comments %}
-        <h2 class="mt-5" id="comments">Comments</h2>
+        <hr class="mt-3"/>
+
+        <h2 id="comments">Comments</h2>
 
         <div class="d-flex justify-content-center">
             <div class="comments">

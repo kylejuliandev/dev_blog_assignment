@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from django.forms import ValidationError
 from accounts.models import User
-from articles.admin import PublishArticleForm
+from articles.admin import PublishArticleForm, PublishCommentForm
 from articles.models import Article, Comment
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -45,6 +45,43 @@ def article(request, article_id:UUID):
     comments = get_comments(article_id)
     
     return render(request, 'articles/article.html', { 'article': article, 'comments': comments })
+
+def comment(request, article_id:UUID):
+    """Comment on an article"""
+    
+    if article_id == None:
+        return redirect(reverse(viewname='home'))
+    
+    if not request.user.is_authenticated:
+        return redirect(reverse(viewname='home'))
+
+    existingArticle = get_article(article_id)
+
+    if request.method == "POST":
+        form = PublishCommentForm(request.POST)
+        if form.is_valid():
+            user = get_user(request)
+            content = str(form.cleaned_data['content'])
+
+            if len(content) > 280:
+                form.add_error(field='content', error=ValidationError('Comment is too long'))
+            
+            if not form.errors:
+                comment = Comment()
+                comment.id = uuid4()
+                comment.author = user
+                comment.article = existingArticle
+                comment.content = content
+                comment.created_on = datetime.utcnow()
+                comment.save()
+
+                # Switch method to GET
+                request.method = "GET"
+                return article(request, article_id)
+    else:
+        form = PublishCommentForm()
+    
+    return render(request, 'articles/comment.html', { 'article': existingArticle, 'form': form, 'article_id': article_id })
 
 def publish_article(request):
     """Presents the user with a form to create a article"""
