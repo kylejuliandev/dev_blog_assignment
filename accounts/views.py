@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def signin(request):
     """User is presented with login form 'accounts/signin.html'"""
 
-    if request.method != 'GET':
+    if request.method != 'POST':
         form = LoginForm()
         return render(request, 'accounts/signin.html', { 'form': form })
 
@@ -40,7 +40,7 @@ def signin(request):
 def signup(request):
     """Allows the user to sign up as a non-admin and non-author. User is presented with 'accounts/signup.html'"""
 
-    if request.method != 'GET': 
+    if request.method != 'POST': 
         form = SignupForm()
         return render(request, 'accounts/signup.html', { 'form': form })
 

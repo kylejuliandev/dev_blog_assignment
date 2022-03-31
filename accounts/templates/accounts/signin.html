@@ -25,14 +25,26 @@
         {% endif %}
 
         <div class="form-floating mb-2">
-            {{ form.username.errors }}
-            {% render_field form.username class+="form-control" %}
+            {% if form.username.errors %}
+                {% render_field form.username class+="form-control is-invalid" %}
+            {% else %}
+                {% render_field form.username class+="form-control" %}
+            {% endif %}
             <label for="{{ form.username.id_for_label }}">Username</label>
+            {% for message in form.first_name.errors %}
+                <p>{{ message }}</p>
+            {% endfor %}
         </div>
         <div class="form-floating mb-3">
-            {{ form.password.errors }}
-            {% render_field form.password class+="form-control" type="password" %}
+            {% if form.password.errors %}
+                {% render_field form.password class+="form-control is-invalid" type="password" %}
+            {% else %}
+                {% render_field form.password class+="form-control" type="password" %}
+            {% endif %}
             <label for="{{ form.password.id_for_label }}">Password</label>
+            {% for message in form.password.errors %}
+                <p>{{ message }}</p>
+            {% endfor %}
         </div>
 
         <button class="w-50 btn btn-lg btn-primary mb-5" type="submit">Sign in</button>
