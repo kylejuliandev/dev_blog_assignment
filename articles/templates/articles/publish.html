@@ -29,14 +29,14 @@
             <div class="col-sm-8">
                 <div class="form-floating">
                     {% if form.title.errors %}
-                        {% render_field form.title class+="form-control is-invalid" %}
+                        {% render_field form.title class+="form-control is-invalid" id="title" %}
                     {% else %}
-                        {% render_field form.title class+="form-control" %}
+                        {% render_field form.title class+="form-control" id="title" %}
                     {% endif %}
         
-                    <label for="{{ form.title.id_for_label }}">Title</label>
+                    <label for="title">Title</label>
                     {% for message in form.title.errors %}
-                        <p>*{{ message }}</p>
+                        <p>{{ message }}</p>
                     {% endfor %}
                 </div>
             </div>
@@ -46,14 +46,14 @@
             <div class="col-sm-8">
                 <div class="form-floating">
                     {% if form.summary.errors %}
-                        {% render_field form.summary class+="form-control is-invalid" %}
+                        {% render_field form.summary class+="form-control is-invalid" id="summary" %}
                     {% else %}
-                        {% render_field form.summary class+="form-control" %}
+                        {% render_field form.summary class+="form-control" id="summary" %}
                     {% endif %}
         
-                    <label for="{{ form.summary.id_for_label }}">Summary</label>
+                    <label for="summary">Summary</label>
                     {% for message in form.summary.errors %}
-                        <p>*{{ message }}</p>
+                        <p>{{ message }}</p>
                     {% endfor %}
                 </div>
             </div>
@@ -65,14 +65,14 @@
             <div class="col-sm-8">
                 <div class="form-floating">
                     {% if form.content.errors %}
-                        {% render_field form.content class+="form-control is-invalid" %}
+                        {% render_field form.content class+="form-control is-invalid" id="content" %}
                     {% else %}
-                        {% render_field form.content class+="form-control" %}
+                        {% render_field form.content class+="form-control" id="content" %}
                     {% endif %}
         
-                    <label for="{{ form.content.id_for_label }}">Content</label>
+                    <label for="content">Content</label>
                     {% for message in form.content.errors %}
-                        <p>*{{ message }}</p>
+                        <p>{{ message }}</p>
                     {% endfor %}
                 </div>
             </div>

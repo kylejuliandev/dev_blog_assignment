@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block appstatic %}
-<link rel="stylesheet" type="text/css" href="{% static 'accounts/accounts.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/accounts.css' %}"/>
 {% endblock %}
 
 {% block body %}
@@ -48,12 +48,12 @@
 
         <div class="form-floating mb-2">
             {% if form.first_name.errors %}
-                {% render_field form.first_name class+="form-control is-invalid" %}
+                {% render_field form.first_name class+="form-control is-invalid" id="first_name" %}
             {% else %}
-                {% render_field form.first_name class+="form-control" %}
+                {% render_field form.first_name class+="form-control" id="first_name" %}
             {% endif %}
 
-            <label for="{{ form.first_name.id_for_label }}">First name</label>
+            <label for="first_name">First name</label>
             {% for message in form.first_name.errors %}
                 <p>*{{ message }}</p>
             {% endfor %}
@@ -61,12 +61,12 @@
 
         <div class="form-floating mb-5">
             {% if form.last_name.errors %}
-                {% render_field form.last_name class+="form-control is-invalid" %}
+                {% render_field form.last_name class+="form-control is-invalid" id="last_name" %}
             {% else %}
-                {% render_field form.last_name class+="form-control" %}
+                {% render_field form.last_name class+="form-control" id="last_name" %}
             {% endif %}
 
-            <label for="{{ form.last_name.id_for_label }}">Last name</label>
+            <label for="last_name">Last name</label>
             {% for message in form.last_name.errors %}
                 <p>*{{ message }}</p>
             {% endfor %}
@@ -76,12 +76,12 @@
             <div class="col-sm-6">
                 <div class="form-floating mb-2">
                     {% if form.password.errors %}
-                        {% render_field form.password class+="form-control is-invalid" type="password" %}
+                        {% render_field form.password class+="form-control is-invalid" type="password" id="password" %}
                     {% else %}
-                        {% render_field form.password class+="form-control" type="password" %}
+                        {% render_field form.password class+="form-control" type="password" id="password" %}
                     {% endif %}
 
-                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    <label for="password">Password</label>
                     {% for message in form.password.errors %}
                         <p>*{{ message }}</p>
                     {% endfor %}
