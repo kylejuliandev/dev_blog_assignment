@@ -15,10 +15,7 @@
         <div class="d-flex justify-content-end">
             <div class="row">
                 <div class="col">
-                    <form action="." method="POST">
-                        {% csrf_token %}
-                        <button class="btn edit-btn" disabled>Edit</button>
-                    </form>
+                    <a class="btn edit-btn" href="{% url 'edit_article' article_id=article.id %}">Edit</a>
                 </div>
                 <div class="col">
                     <form action="{% url 'article' article.id %}" method="POST">
@@ -33,10 +30,22 @@
     <div class="d-flex justify-content-center">
         <div class="article-summary mt-3" id="article1">
             <div class="row m-2">
-                <div class="col-8">
-                    <h2>{{ article.title }}</h2>
+                <div class="col">
+                    <h2 class="title">{{ article.title }}</h2>
                     <p>{{ article.created_on }}</p>
                     <p class="author">{{ article.author.first_name }} {{ article.author.last_name }}</p>
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col d-flex justify-content-end">
+                    {% if article.created_on != article.updated_on %}
+                        <p class="updated-on">Updated at {{ article.updated_on }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row m-2">
+                <div class="col">
+                    <p class="summary">{{ article.summary }}</p>
                 </div>
             </div>
             <div class="row m-2">

@@ -86,6 +86,49 @@ def publish_article(request):
     else:
         return redirect(reverse(viewname='home'))
 
+def edit_article(request, article_id):
+    """Presents the user with a form to edit a article"""
+
+    if request.user.is_authenticated:
+        user = get_user(request)
+        if user.is_author:
+            existingArticle = get_article(article_id)
+            if existingArticle != None and existingArticle.author == user:
+                if request.method == 'POST':
+                    form = PublishArticleForm(request.POST)
+
+                    if form.is_valid():
+                        title = str(form.cleaned_data['title'])
+                        summary = str(form.cleaned_data['summary'])
+                        content = str(form.cleaned_data['content'])
+
+                        if len(title) > 200:
+                            form.add_error(field='title', error=ValidationError('Title is too long'))
+                        
+                        if len(summary) > 255:
+                            form.add_error(field='title', error=ValidationError('Summary is too long'))
+                        
+                        if not form.errors:
+                            existingArticle.title = title
+                            existingArticle.summary = summary
+                            existingArticle.content = content
+                            existingArticle.updated_on = datetime.utcnow()
+
+                            existingArticle.save()
+
+                            # We overwrite the request method to prevent instaneous deletion
+                            request.method = "GET"
+                            return article(request, existingArticle.id)
+                else:
+                    form = PublishArticleForm()
+                    form.fields['title'].initial = existingArticle.title
+                    form.fields['summary'].initial = existingArticle.summary
+                    form.fields['content'].initial = existingArticle.content
+                
+                return render(request, 'articles/edit.html', { 'form': form })
+    
+    return redirect(reverse(viewname='home'))
+
 def get_user(request) -> User:
     """Get authenticated user from the request"""
 

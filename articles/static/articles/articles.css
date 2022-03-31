@@ -38,3 +38,16 @@
 .edit-btn:hover {
     color: #0e5acd !important;
 }
+
+.title {
+    overflow-wrap: break-word;
+}
+
+.summary {
+    overflow-wrap: break-word;
+}
+
+.updated-on {
+    font-style:italic; 
+    font-size: smaller;
+}

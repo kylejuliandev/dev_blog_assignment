@@ -11,5 +11,6 @@ home_list_view = views.HomeListView.as_view(
 urlpatterns = [
     path('', home_list_view, name='home'),
     path('article/<uuid:article_id>', views.article, name='article'),
+    path('article/<uuid:article_id>/edit', views.edit_article, name='edit_article'),
     path('article', views.publish_article, name='publish_article'),
 ]
