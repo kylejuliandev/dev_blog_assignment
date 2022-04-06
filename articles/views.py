@@ -95,38 +95,29 @@ def comment(request, article_id:UUID):
     form = PublishCommentForm(request.POST)
     if form.is_valid():
         content = str(form.cleaned_data['content'])
-
-        if len(content) > 280:
-            form.add_error(field='content', error=ValidationError('Comment is too long'))
         
-        if not form.errors:
-            comment = Comment()
-            comment.id = uuid4()
-            comment.author = user
-            comment.article = existingArticle
-            comment.content = content
-            comment.created_on = datetime.utcnow()
+        comment = Comment()
+        comment.id = uuid4()
+        comment.author = user
+        comment.article = existingArticle
+        comment.content = content
+        comment.created_on = datetime.utcnow()
 
-            try:
-                comment.save()
-                logger.info('Comment %s added to Article %s by User %s', comment.id, article_id, user.username)
-            except:
-                logger.exception('Unable to save Comment %s to the database for User %s on Article %s due to exception', comment.id, user.username, article_id)
+        try:
+            comment.save()
+            logger.info('Comment %s added to Article %s by User %s', comment.id, article_id, user.username)
+        except:
+            logger.exception('Unable to save Comment %s to the database for User %s on Article %s due to exception', comment.id, user.username, article_id)
 
-            # Switch method to GET
-            request.method = "GET"
-            return article(request, article_id)
-        else:
-            logger.debug('User %s tried to publish a Comment on Article %s but it failed as additional form validation failed', user.username, article_id)
+        # Switch method to GET
+        request.method = "GET"
+        return article(request, article_id)
     else:
         logger.debug('User %s tried to publish a Comment on Article %s but it failed as the form was not valid', user.username, article_id)
 
     return render(request, 'articles/comment.html', { 'article': existingArticle, 'form': form, 'article_id': article_id })
 
 def remove_comment(request, article_id:UUID, comment_id:UUID):
-    if article_id == None or comment_id == None:
-        return redirect(reverse(viewname='home'))
-    
     user = get_user(request)
     if not user.is_authenticated:
         logger.warning('Unauthenticated User tried to remove Comment %s on Article %s', comment_id, article_id)
@@ -134,7 +125,7 @@ def remove_comment(request, article_id:UUID, comment_id:UUID):
     
     try:
         comment = get_comment(article_id, comment_id)    
-        if comment.author == user:
+        if comment.author == user or user.is_admin or comment.article.author == user:
             comment.delete()
             logger.info('User %s removed Comment %s on Article %s', user.username, comment_id, article_id)
         else:
@@ -155,7 +146,7 @@ def publish_article(request):
         logger.warning('Unauthenticated User tried to publish an Article')
         return redirect(reverse(viewname='home'))
         
-    if not user.is_author:
+    if not user.is_author and not user.is_admin:
         logger.warning('User %s tried to publish an Article', user.username)
         return redirect(reverse(viewname='home'))
 
@@ -169,29 +160,20 @@ def publish_article(request):
         summary = str(form.cleaned_data['summary'])
         content = str(form.cleaned_data['content'])
 
-        if len(title) > 200:
-            form.add_error(field='title', error=ValidationError('Title is too long'))
-        
-        if len(summary) > 255:
-            form.add_error(field='title', error=ValidationError('Summary is too long'))
-        
-        if not form.errors:
-            newArticle = Article()
-            newArticle.id = uuid4()
-            newArticle.author = user
-            newArticle.title = title
-            newArticle.summary = summary
-            newArticle.content = content
-            newArticle.created_on = datetime.utcnow()
-            newArticle.updated_on = datetime.utcnow()
+        newArticle = Article()
+        newArticle.id = uuid4()
+        newArticle.author = user
+        newArticle.title = title
+        newArticle.summary = summary
+        newArticle.content = content
+        newArticle.created_on = datetime.utcnow()
+        newArticle.updated_on = datetime.utcnow()
 
-            newArticle.save()
+        newArticle.save()
 
-            # We overwrite the request method to prevent instaneous deletion
-            request.method = "GET"
-            return article(request, newArticle.id)
-        else:
-            logger.debug('User %s tried to create Article but additional form validation failed', user.username)    
+        # We overwrite the request method to prevent instaneous deletion
+        request.method = "GET"
+        return article(request, newArticle.id)
     else:
         logger.debug('User %s tried to create Article but form validation failed', user.username)
 
@@ -237,26 +219,17 @@ def edit_article(request, article_id):
         summary = str(form.cleaned_data['summary'])
         content = str(form.cleaned_data['content'])
 
-        if len(title) > 200:
-            form.add_error(field='title', error=ValidationError('Title is too long'))
-        
-        if len(summary) > 255:
-            form.add_error(field='title', error=ValidationError('Summary is too long'))
-        
-        if not form.errors:
-            existingArticle.title = title
-            existingArticle.summary = summary
-            existingArticle.content = content
-            existingArticle.updated_on = datetime.utcnow()
+        existingArticle.title = title
+        existingArticle.summary = summary
+        existingArticle.content = content
+        existingArticle.updated_on = datetime.utcnow()
 
-            existingArticle.save()
-            logger.info('User %s edited Article %s', user.username, article_id)
+        existingArticle.save()
+        logger.info('User %s edited Article %s', user.username, article_id)
 
-            # We overwrite the request method to prevent instaneous deletion
-            request.method = "GET"
-            return article(request, existingArticle.id)
-        else:
-            logger.debug('User %s tried to edit Article %s but the additional form validation failed', user.username, article_id)    
+        # We overwrite the request method to prevent instaneous deletion
+        request.method = "GET"
+        return article(request, existingArticle.id)
     else:
         logger.debug('User %s tried to edit Article %s but they submitted a form with errors', user.username, article_id)
 

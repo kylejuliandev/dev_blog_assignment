@@ -22,6 +22,7 @@
         <li><a href="#data">Data</a></li>
       </ul>
     </li>
+    <li><a href="#example-request">Example request</a></li>
   </ol>
 </details>
 
@@ -188,4 +189,27 @@ The Azure Connection String will be the location of the Blob store where the CDN
 
 ```txt
 DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;
+```
+
+## Example request
+
+Below depicates a sequence diagram of the steps involved for navigating to and loading content from the dev blog. The diagram neglects to illustrate the role of Internet Service Providers, Domain Name Servers, and Internet registrars, however it simply visualises a typical workflow through the web application.
+
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant B as Browser
+    participant WS as Django
+    participant DB as PostgreSQL
+    participant CDN as Azure CDN
+    U->>+B: Navigate to dev
+    Note over U,B: blogkylejuliandevblog.herokuapp.com
+    B->>+WS: Request web page
+    WS->>+DB: Request articles
+    DB->>-WS: Return paginated articles
+    WS->>-B: Generate html content
+    B->>+CDN: Get static resources
+    Note over B,CDN: Javascript, CSS, and image files
+    CDN->>-B: Return static resources
+    B->>-U: Show rendered web page
 ```

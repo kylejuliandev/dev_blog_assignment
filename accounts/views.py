@@ -27,11 +27,8 @@ def signin(request):
         passw = str(form.cleaned_data['password'])
         user = authenticate(username=user, password=passw)
         if user is not None:
-            if user.is_active:
-                login(request=request, user=user)
-                return redirect(reverse(viewname='home'))
-            else:
-                form.add_error(field=None, error='User account is locked')
+            login(request=request, user=user)
+            return redirect(reverse(viewname='home'))
         else:
             form.add_error(field=None, error='User Id or Password was incorrect')
 
@@ -141,7 +138,7 @@ def closeaccount(request):
     
     response = HttpResponse()
     user = request.user
-    if not user.user.is_authenticated:
+    if user == None or not user.is_authenticated:
         response.status_code = 401
         return response
     
@@ -175,9 +172,6 @@ def validate_name(form:Form, field:str, input:str):
 
     # Only alphabetical characters are allowable
     charactersOnlyPattern = '^[a-zA-Z]+$'
-    if len(input) > 50:
-        form.add_error(field=field, error='Name is too long')
-    
     if not re.match(charactersOnlyPattern, input):
         form.add_error(field=field, error='Name cannot only consist of letters')
 
