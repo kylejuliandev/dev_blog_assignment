@@ -9,6 +9,7 @@ class ArticleTest(TestCase):
         super().__init__(methodName)
 
     def setUp(self) -> None:
+        """Sets up test data for a run. Creates three users and 10 articles"""
         author = create_mock_author('TestUser', 'TestUser_P')
         create_mock_author('AlternativeTestUser', 'AlternativeTestUser_P')
         create_mock_admin('AdminTestUser', 'AdminTestUser_P')
@@ -16,16 +17,27 @@ class ArticleTest(TestCase):
         return super().setUp()
     
     def tearDown(self) -> None:
+        """Tears down test data that was created in a test run"""
         User.objects.all().delete()
         Article.objects.all().delete()
         return super().tearDown()
     
     def test_article_get_with_no_article_id(self): 
+        """
+            Given mock article has been created,
+            When get article without specified id,
+            Then I am redirected to the home page
+        """
         response = self.client.get('/article')
 
         self.assertEqual(response.status_code, 302)
 
     def test_article_get_with_no_comments(self):
+        """
+            Given mock article has been created,
+            When get article with specified id,
+            Then I am shown the article
+        """
         article_id = str(Article.objects.all().first().id)
 
         response = self.client.get('/article/' + article_id)
@@ -33,6 +45,12 @@ class ArticleTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_article_get_with_comments(self):
+        """
+            Given mock article has been created with a single comment,
+            When get article with specified id,
+            Then I am shown the article with the comment
+        """
+
         article = Article.objects.all().first()
         article_id = str(article.id)
 
@@ -48,6 +66,12 @@ class ArticleTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_article_delete_and_is_author(self):
+        """
+            Given mock article has been created,
+            When I send a delete request as the author,
+            Then the article is removed
+        """
+
         article = Article.objects.all().first()
         article_id = str(article.id)
 
@@ -59,6 +83,12 @@ class ArticleTest(TestCase):
         self.assertEqual(checkArticle.count(), 0)
 
     def test_article_delete_and_is_not_author(self):
+        """
+            Given mock article has been created,
+            When I send a delete request as not the author,
+            Then the article is not removed
+        """
+
         article = Article.objects.all().first()
         article_id = str(article.id)
 
@@ -70,6 +100,12 @@ class ArticleTest(TestCase):
         self.assertIsNotNone(checkArticle)
     
     def test_article_delete_and_is_admin(self):
+        """
+            Given mock article has been created,
+            When I send a delete request as an admin,
+            Then the article is removed
+        """
+
         article = Article.objects.all().first()
         article_id = str(article.id)
 

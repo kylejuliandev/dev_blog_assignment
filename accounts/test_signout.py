@@ -6,14 +6,22 @@ class SignoutTest(TestCase):
         super().__init__(methodName)
 
     def setUp(self) -> None:
+        """Creates test data and adds 1 user"""
         create_mock_user('TestUser', 'TestUser_P', False, True)
         return super().setUp()
     
     def tearDown(self) -> None:
+        """Tears down created test data, removes all user objects"""
         User.objects.all().delete()
         return super().tearDown()
     
     def test_signout(self):
+        """
+            Given that I am a authenticated user,
+            When I logoff,
+            Then I am redirected to the home page and am signed out
+        """
+
         self.client.login(username='testuser', password='TestUser_P')
         response = self.client.get('/logoff')
         self.assertEqual(response.status_code, 302) # Redirected to home page

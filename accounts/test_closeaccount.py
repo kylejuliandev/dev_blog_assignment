@@ -6,33 +6,65 @@ class ManageTest(TestCase):
         super().__init__(methodName)
 
     def setUp(self) -> None:
+        """Sets up test data, and creates a test user"""
         create_mock_user('TestUser', 'TestUser_P', False, True)
         return super().setUp()
     
     def tearDown(self) -> None:
+        """Tears down test data, and removes all users"""
         User.objects.all().delete()
         return super().tearDown()
     
     def test_close_account_with_unauthenticated_user(self):
+        """
+            Given I am not authenticated,
+            When I close my account,
+            Then I am returned a 401 status
+        """
+
         response = self.client.delete('/closeaccount')
         self.assertEqual(response.status_code, 401)
 
     def test_close_account_with_get_request(self): 
+        """
+            Given I am authenticated,
+            When I close my account with a get request,
+            Then I am returned a method not support status
+        """
+
         self.client.login(username='testuser', password='TestUser_P')
         response = self.client.get('/closeaccount')
         self.assertEqual(response.status_code, 405)
     
     def test_close_account_with_post_request(self): 
+        """
+            Given I am authenticated,
+            When I close my account with a post request,
+            Then I am returned a method not support status
+        """
+
         self.client.login(username='testuser', password='TestUser_P')
         response = self.client.post('/closeaccount')
         self.assertEqual(response.status_code, 405)
     
     def test_close_account_with_put_request(self): 
+        """
+            Given I am authenticated,
+            When I close my account with a put request,
+            Then I am returned a method not support status
+        """
+
         self.client.login(username='testuser', password='TestUser_P')
         response = self.client.put('/closeaccount')
         self.assertEqual(response.status_code, 405)
     
     def test_close_anoynimises_pii(self): 
+        """
+            Given I am authenticated,
+            When I close my account with a delete request,
+            Then my user account is closed and pii data is anoynimised
+        """
+
         self.client.login(username='testuser', password='TestUser_P')
         response = self.client.delete('/closeaccount')
 
