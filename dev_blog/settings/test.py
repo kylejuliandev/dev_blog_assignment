@@ -1,4 +1,5 @@
 DEBUG = True
+SECRET_KEY = 'random_unit_test_secret'
 
 DATABASES = {
     'default': {
